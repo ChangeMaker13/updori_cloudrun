@@ -14,7 +14,7 @@ app.head("/", (req: Request, res: Response): void => {
 });
 
 app.get("/", (req: Request, res: Response): void => {
-  res.send("ok");
+  res.send("Updori");
 });
 
 app.head("/api", (req: Request, res: Response): void => {
