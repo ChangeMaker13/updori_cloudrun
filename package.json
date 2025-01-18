@@ -1,0 +1,61 @@
+{
+  "name": "cloud-run-app",
+  "private": true,
+  "description": "Node.js app with TypeScript for Cloud Run",
+  "version": "0.2.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/app.js",
+  "bin": {
+    "cmd": "./bin/cmd"
+  },
+  "files": [
+    "dist/**.*"
+  ],
+  "scripts": {
+    "prepare": "husky install",
+    "clean": "rimraf dist types",
+    "dev": "NODE_ENV=development tsx watch src/app.ts",
+    "start": "NODE_ENV=production node ./dist/app.js",
+    "prebuild": "npm run lint && npm run clean",
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "npm run lint -- --fix",
+    "check": "prettier --check .",
+    "format": "prettier --write .",
+    "test": "NODE_OPTIONS=\"--experimental-vm-modules --no-warnings=ExperimentalWarning\" jest --no-cache --silent",
+    "test:watch": "npm test -- --watch",
+    "test:watchAll": "npm test -- --watchAll",
+    "test:unit": "npm test -- ./src/",
+    "test:integration": "npm test -- ./test/",
+    "test:smoke": "npm test -- ./test/smoke.test.ts",
+    "test:coverage": "npm test -- --coverage",
+    "test:serial": "npm test -- --runInBand",
+    "deploy": "gcloud run deploy Updori --project=updori-ebacb --region=asia-northeast3 --platform managed --allow-unauthenticated --source .",
+    "logs": " gcloud beta run services logs read $SERVICE --project=$PROJECT --region=[REGION] --limit=10",
+    "logs:tail": "gcloud beta run services logs tail $SERVICE --project=$PROJECT --region=$REGION"
+  },
+  "devDependencies": {
+    "@types/express": "4.17.21",
+    "@types/jest": "29.5.10",
+    "@types/supertest": "2.0.16",
+    "@typescript-eslint/eslint-plugin": "6.13.1",
+    "@typescript-eslint/parser": "6.13.1",
+    "eslint": "8.54.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-prettier": "5.0.1",
+    "husky": "8.0.3",
+    "jest": "29.7.0",
+    "lint-staged": "15.1.0",
+    "prettier": "3.1.0",
+    "rimraf": "5.0.5",
+    "supertest": "6.3.3",
+    "ts-jest": "29.1.1",
+    "tsx": "4.6.0",
+    "typescript": "5.3.2"
+  },
+  "dependencies": {
+    "@google-cloud/logging": "11.0.0",
+    "express": "4.18.2"
+  }
+}

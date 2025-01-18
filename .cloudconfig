@@ -1,0 +1,19 @@
+# Set your shell variables for Cloud Run below.
+#
+# It's recommended that you make a copy of the generated `.cloudconfig` to
+# `cloudconfig`, if you don't want to commit the settings (`cloudconfig` is
+# ignored by `.gitignore`).
+#
+# Run the following command to source these variables into your bash
+# environment before running any of the npm scripts:
+#
+#     source cloudconfig
+
+# The Google Cloud project ID
+export PROJECT=
+
+# The region for the deployed service
+export REGION=
+
+# The Cloud Run service name
+export SERVICE=

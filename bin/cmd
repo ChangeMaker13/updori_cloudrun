@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+import process from "node:process";
+import { start } from "../dist/app.js";
+const port = process.env["PORT"] || "8080";
+await start(port);
