@@ -30,8 +30,8 @@ import { sellRoutine } from "./lib/sellRoutine.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
-//const cloud_run_url = "https://updori-cloud-run-default-rtdb.firebaseio.com";
-const cloud_run_url = "http://localhost:8080";
+const cloud_run_url = "https://updori-cloud-run-default-rtdb.firebaseio.com";
+//const cloud_run_url = "http://localhost:8080";
 
 const db = admin.firestore();
 
