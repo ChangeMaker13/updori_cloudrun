@@ -4,6 +4,6 @@ node_modules/
 cloudconfig
 
 
-
+serviceAccount.json
 .nx/cache
 .nx/workspace-data
