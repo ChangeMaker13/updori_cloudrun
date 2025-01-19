@@ -12,9 +12,9 @@ const { sign } = jwt;
 
 import crypto from "crypto";
 import qs from "querystring";
-import { getAccount } from "./getAccount";
-import { getCurrentPrice } from "./getCurrentPrice";
-import { calcMinPriceUnit } from "./calcMinPriceUnit";
+import { getAccount } from "./getAccount.js";
+import { getCurrentPrice } from "./getCurrentPrice.js";
+import { calcMinPriceUnit } from "./calcMinPriceUnit.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";

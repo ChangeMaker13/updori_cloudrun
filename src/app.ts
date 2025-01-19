@@ -12,6 +12,9 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
+import dotenv from "dotenv";
+dotenv.config();
+
 import request from "request";
 import { v4 as uuidv4 } from "uuid";
 
@@ -30,8 +33,8 @@ import { sellRoutine } from "./lib/sellRoutine.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
-const cloud_run_url = "https://updori-cloud-run-default-rtdb.firebaseio.com";
-//const cloud_run_url = "http://localhost:8080";
+
+const cloud_run_url = process.env["NODE_ENV"] === "production" ? "https://updori-cloud-run-default-rtdb.firebaseio.com" : "http://localhost:8080";
 
 const db = admin.firestore();
 
@@ -254,11 +257,14 @@ if (import.meta.url.endsWith(process.argv[1]!)) {
   await start(port);
 }
 
-// 서버 실행
+// 서버 실행\
+
+if (process.env["NODE_ENV"] === "development") {
 const port = process.env["PORT"] || "8080";
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+}
 
 ////////////////////////////////functions////////////////////////////////
 

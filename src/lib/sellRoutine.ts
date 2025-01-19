@@ -18,10 +18,10 @@ const { sign } = jwt;
 
 import crypto from "crypto";
 import qs from "querystring";
-import { getAccount } from "./getAccount";
-import { getCurrentPrice } from "./getCurrentPrice";
-import { calcMinPriceUnit } from "./calcMinPriceUnit";
-import { SellCoinsParams } from "../types";
+import { getAccount } from "./getAccount.js";
+import { getCurrentPrice } from "./getCurrentPrice.js";
+import { calcMinPriceUnit } from "./calcMinPriceUnit.js";
+import { SellCoinsParams } from "../types.js";
 const queryEncode = qs.encode;
 
 import admin from "firebase-admin";
