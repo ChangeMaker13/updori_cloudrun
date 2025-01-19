@@ -9,6 +9,7 @@ const require = createRequire(import.meta.url);
 const serviceAccount = require("./serviceAccount.json");
 import admin from "firebase-admin";
 admin.initializeApp({
+  //credential: admin.credential.applicationDefault(),
   credential: admin.credential.cert(serviceAccount),
 });
 
@@ -256,6 +257,12 @@ if (import.meta.url.endsWith(process.argv[1]!)) {
   const port = process.env["PORT"] || "8080";
   await start(port);
 }
+
+// 서버 실행
+// const port = process.env["PORT"] || "8080";
+// app.listen(port, () => {
+//   console.log(`Server is running on http://localhost:${port}`);
+// });
 
 ////////////////////////////////functions////////////////////////////////
 
