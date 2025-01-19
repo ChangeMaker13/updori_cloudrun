@@ -260,6 +260,7 @@ if (import.meta.url.endsWith(process.argv[1]!)) {
 }
 
 // 서버 실행
+console.log(process.env["NODE_ENV"]);
 if (process.env["NODE_ENV"] === "development") {
   const port = process.env["PORT"] || "8080";
   app.listen(port, () => {
