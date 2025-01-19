@@ -1,0 +1,1 @@
+{"version":3,"file":"sellcoin.d.ts","sourceRoot":"","sources":["../../src/lib/sellcoin.ts"],"names":[],"mappings":"AAqBA,wBAAsB,QAAQ,CAC5B,UAAU,EAAE,MAAM,EAClB,UAAU,EAAE,MAAM,EAClB,SAAS,EAAE,MAAM,EACjB,QAAQ,EAAE,MAAM,EAChB,QAAQ,EAAE,MAAM,EAChB,MAAM,EAAE,MAAM,GACb,OAAO,CAAC;IAAE,QAAQ,EAAE,GAAG,CAAC;IAAC,IAAI,EAAE,GAAG,CAAA;CAAE,CAAC,CA2DvC"}
