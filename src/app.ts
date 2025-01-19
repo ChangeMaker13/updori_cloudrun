@@ -46,6 +46,16 @@ export const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.get("/checkOutboundIP", (req: Request, res: Response): void => {
+    request.get("https://api.ipify.org?format=json", (error, response, body) => {
+      if (error) {
+          res.status(500).send(error);
+          return;
+      }
+      res.send(JSON.parse(body).ip);
+  });
+});
+
 app.post("/api/verifytoken", async (req: Request, res: Response): Promise<void> => {
   const access_key = req.body.access_key;
   const secret_key = req.body.secret_key;
