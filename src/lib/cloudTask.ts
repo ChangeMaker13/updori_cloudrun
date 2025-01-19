@@ -26,7 +26,7 @@ export async function makeTask(funcName: string, afterSeconds: string, payload: 
   const parent = client.queuePath(project, location, queue);
   console.log("Queue 경로:", parent);
 
-  const funcURL = `${cloudRunDomain}/${funcName}`;
+  const funcURL = `${cloudRunDomain}/${funcName}`; 
   //const email = `${project}@appspot.gserviceaccount.com`;
 
   // Task 생성
