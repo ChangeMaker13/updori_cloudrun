@@ -257,8 +257,7 @@ if (import.meta.url.endsWith(process.argv[1]!)) {
   await start(port);
 }
 
-// 서버 실행\
-
+// 서버 실행
 if (process.env["NODE_ENV"] === "development") {
 const port = process.env["PORT"] || "8080";
   app.listen(port, () => {
