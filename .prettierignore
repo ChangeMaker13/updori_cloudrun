@@ -3,3 +3,4 @@ dist/
 types/
 *.md
 .eslintrc.cjs
+src/*
