@@ -10,7 +10,6 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   parserOptions: { project: ["./tsconfig.json"] },
   rules: {
-    "prettier/prettier": "error",
     "no-unused-vars": "warn",
   },
 };

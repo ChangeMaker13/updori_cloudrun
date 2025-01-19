@@ -1,6 +1,7 @@
 {
   "include": ["./src/**/*", "./test/**/*"],
   "compilerOptions": {
+    "resolveJsonModule": true,
     "alwaysStrict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

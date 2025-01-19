@@ -1,7 +1,7 @@
 {
-  "name": "cloud-run-app",
+  "name": "updori",
   "private": true,
-  "description": "Node.js app with TypeScript for Cloud Run",
+  "description": "Node.js app with TypeScript for Updori",
   "version": "0.2.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -15,7 +15,7 @@
   "scripts": {
     "prepare": "husky install",
     "clean": "rimraf dist types",
-    "dev": "NODE_ENV=development tsx watch src/app.ts",
+    "dev": "npx tsx watch src/app.ts",
     "start": "NODE_ENV=production node ./dist/app.js",
     "prebuild": "npm run lint && npm run clean",
     "build": "tsc -p tsconfig.build.json",
@@ -51,11 +51,22 @@
     "rimraf": "5.0.5",
     "supertest": "6.3.3",
     "ts-jest": "29.1.1",
-    "tsx": "4.6.0",
+    "tsx": "^4.6.0",
     "typescript": "5.3.2"
   },
   "dependencies": {
     "@google-cloud/logging": "11.0.0",
-    "express": "4.18.2"
+    "express": "4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "request": "^2.88.2",
+    "@google-cloud/pubsub": "^3.5.2",
+    "@google-cloud/secret-manager": "^4.2.2",
+    "@google-cloud/tasks": "^3.1.2",
+    "axios": "^1.4.0",
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.3.1",
+    "google-auth-library": "^8.8.0",
+    "googleapis": "^118.0.0",
+    "lodash": "^4.17.21"
   }
 }

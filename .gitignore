@@ -2,3 +2,8 @@ coverage/
 dist/
 node_modules/
 cloudconfig
+
+
+
+.nx/cache
+.nx/workspace-data
