@@ -29,6 +29,7 @@ export async function getCurrentPrice(market: string): Promise<number> {
         reject(error);
       }
       const parsedBody = JSON.parse(body);
+      console.log(parsedBody);
       const currentPrice = parsedBody[0].trade_price;
       resolve(currentPrice);
     });

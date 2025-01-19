@@ -183,6 +183,24 @@ app.post("/api/sellRoutine", async (req: Request, res: Response): Promise<void> 
   });
 });
 
+app.get("/api/currentPrice", async (req: Request, res: Response): Promise<void> => {
+  const currency = req.query.currency;
+  const market = "KRW-" + currency;
+
+  console.log(market);
+
+  try {
+    const currentPrice = await getCurrentPrice(market);
+    res.status(200).send({
+      currentPrice: currentPrice,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "internal server error: " + error,
+    });
+  }
+});
+
 app.post("/api/echo", (req: Request, res: Response): void => {
   const message = req.body.message;
   res.send({
