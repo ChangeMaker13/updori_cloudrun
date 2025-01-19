@@ -195,9 +195,15 @@ app.get("/api/currentPrice", async (req: Request, res: Response): Promise<void> 
       currentPrice: currentPrice,
     });
   } catch (error) {
-    res.status(500).send({
-      message: "internal server error: " + error,
-    });
+    if(error instanceof Error && error.message === "Currency not found") {
+      res.status(404).send({
+        message: "Currency not found",
+      });
+    } else {
+      res.status(500).send({
+        message: "internal server error: " + error,
+      });
+    }
   }
 });
 

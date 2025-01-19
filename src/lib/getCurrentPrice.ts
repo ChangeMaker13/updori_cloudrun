@@ -30,6 +30,14 @@ export async function getCurrentPrice(market: string): Promise<number> {
       }
       const parsedBody = JSON.parse(body);
       console.log(parsedBody);
+      console.log(response.statusCode);
+
+      if(response.statusCode === 404) {
+        console.log("Currency not found");
+        reject(new Error("Currency not found"));
+        return;
+      }
+
       const currentPrice = parsedBody[0].trade_price;
       resolve(currentPrice);
     });
