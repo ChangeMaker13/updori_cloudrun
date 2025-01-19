@@ -1,4 +1,7 @@
 /* eslint-disable */
+import dotenv from "dotenv";
+dotenv.config();
+
 import express, { NextFunction, Request, Response } from "express";
 import { Server } from "node:http";
 import { AddressInfo } from "node:net";
@@ -6,15 +9,13 @@ import process from "node:process";
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
-const serviceAccount = require("./serviceAccount.json");
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || "{}");
+
 import admin from "firebase-admin";
 admin.initializeApp({
   //credential: admin.credential.applicationDefault(),
   credential: admin.credential.cert(serviceAccount),
 });
-
-import dotenv from "dotenv";
-dotenv.config();
 
 import request from "request";
 import { v4 as uuidv4 } from "uuid";
@@ -259,10 +260,10 @@ if (import.meta.url.endsWith(process.argv[1]!)) {
 }
 
 // 서버 실행
-// const port = process.env["PORT"] || "8080";
-// app.listen(port, () => {
-//   console.log(`Server is running on http://localhost:${port}`);
-// });
+const port = process.env["PORT"] || "8080";
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
 
 ////////////////////////////////functions////////////////////////////////
 

@@ -13,7 +13,7 @@ const cloudRunDomain = "https://updori-528826945726.asia-northeast3.run.app";
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
-const serviceAccount = require("../serviceAccount.json");
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || "{}");
 
 export async function makeTask(funcName: string, afterSeconds: string, payload: string) {
   // Task 클라이언트 초기화
