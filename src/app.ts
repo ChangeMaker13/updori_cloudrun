@@ -257,12 +257,6 @@ if (import.meta.url.endsWith(process.argv[1]!)) {
   await start(port);
 }
 
-// 서버 실행
-const port = process.env["PORT"] || "8080";
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
 ////////////////////////////////functions////////////////////////////////
 
 async function getOrderChanceInfo(
