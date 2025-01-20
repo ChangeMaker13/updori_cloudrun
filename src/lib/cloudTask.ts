@@ -11,11 +11,11 @@ const queue = "sellsettingqueue";
 const location = "asia-northeast3";
 const cloudRunDomain = "https://updori-528826945726.asia-northeast3.run.app";
 
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || "{}");
+export async function makeTask(serviceAccount: any, funcName: string, afterSeconds: string, payload: string) {
+  //console.log(funcName, afterSeconds, payload);
 
-export async function makeTask(funcName: string, afterSeconds: string, payload: string) {
+  //console.log(serviceAccount);
+
   // Task 클라이언트 초기화
   const client = new CloudTasksClient({
     credentials: serviceAccount,
@@ -24,16 +24,22 @@ export async function makeTask(funcName: string, afterSeconds: string, payload: 
 
   // Queue 경로 설정
   const parent = client.queuePath(project, location, queue);
-  console.log("Queue 경로:", parent);
+  //console.log("Queue 경로:", parent);
 
   const funcURL = `${cloudRunDomain}/${funcName}`; 
   //const email = `${project}@appspot.gserviceaccount.com`;
+
+  //console.log(funcURL);
 
   // Task 생성
   const task = {
     httpRequest: {
       httpMethod: "POST" as const,
       url: funcURL,
+      oidcToken: {
+        serviceAccountEmail: serviceAccount.client_email,
+        audience: funcURL,
+      },
       headers: {
         "Content-Type": "application/json",
       },
@@ -43,6 +49,8 @@ export async function makeTask(funcName: string, afterSeconds: string, payload: 
       seconds: Date.now() / 1000 + parseInt(afterSeconds),
     },
   };
+
+  //console.log(task);
 
   let response;
   try {

@@ -135,8 +135,10 @@ app.post("/api/makeTask", async (req: Request, res: Response): Promise<void> => 
   const afterSeconds = req.body.afterSeconds;
   const payload = req.body.payload;
 
+  const stringPayload = JSON.stringify(payload);
+
   try {
-    await makeTask(funcName, afterSeconds, payload);
+    await makeTask(serviceAccount, funcName, afterSeconds, stringPayload);
     res.status(200).send({
       message: "task created",
     });
