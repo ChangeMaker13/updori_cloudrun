@@ -44,7 +44,7 @@ export async function makeTask(funcName: string, afterSeconds: string, payload: 
     response = await client.createTask({ parent, task });
     console.log(`response : ${JSON.stringify(response)}`);
     console.log(`Task ${response[0].name} created.`);
-    return response[0].name ?? "";
+    return response[0].name?.split("/").pop() ?? "";
   } catch (err) {
     console.error("Error creating task:", err);
     throw new Error("Failed to create task");
@@ -59,7 +59,7 @@ export async function deleteTask(taskId: string) {
     await client.getTask({ name: parent });
     await client.deleteTask({ name: parent });
   } catch (error) {
-    if (error instanceof Error && 'code' in error && error.code === 5) { // NOT_FOUND
+    if (error instanceof Error && 'code' in error && (error.code === 7 || error.code === 5)) { // NOT_FOUND
       console.log(`Task ${taskId} not found`);
       return;
     }
