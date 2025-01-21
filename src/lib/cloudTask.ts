@@ -28,17 +28,17 @@ export async function makeTask(serviceAccount: any, funcName: string, afterSecon
   //console.log(email);
   //console.log(serviceAccount.client_email);
 
-  //console.log(funcURL);
+  console.log(funcURL);
 
   // Task 생성
   const task = {
     httpRequest: {
       httpMethod: "POST" as const,
       url: funcURL,
-      oidcToken: {
-        serviceAccountEmail: serviceAccount.client_email,
-        audience: funcURL,
-      },
+      //oidcToken: {
+      //  serviceAccountEmail: serviceAccount.client_email,
+      //  audience: funcURL,
+      //},
       headers: {
         "Content-Type": "application/json",
       },
