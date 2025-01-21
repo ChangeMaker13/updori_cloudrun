@@ -7,7 +7,7 @@ import admin from "firebase-admin";
 import { CloudTasksClient } from "@google-cloud/tasks";
 
 const project = "updori-ebacb";
-const queue = "sellsettingqueue";
+const queue = "sellsettingqueue2";
 const location = "asia-northeast3";
 const cloudRunDomain = "https://updori-528826945726.asia-northeast3.run.app";
 
