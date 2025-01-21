@@ -17,10 +17,7 @@ export async function makeTask(serviceAccount: any, funcName: string, afterSecon
   //console.log(serviceAccount);
 
   // Task 클라이언트 초기화
-  const client = new CloudTasksClient({
-    credentials: serviceAccount,
-    projectId: project,
-  });
+  const client = new CloudTasksClient();
 
   // Queue 경로 설정
   const parent = client.queuePath(project, location, queue);
@@ -28,6 +25,8 @@ export async function makeTask(serviceAccount: any, funcName: string, afterSecon
 
   const funcURL = `${cloudRunDomain}/${funcName}`; 
   //const email = `${project}@appspot.gserviceaccount.com`;
+  //console.log(email);
+  //console.log(serviceAccount.client_email);
 
   //console.log(funcURL);
 
