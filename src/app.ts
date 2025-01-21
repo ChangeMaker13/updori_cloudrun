@@ -27,8 +27,9 @@ import { getCurrentPrice } from "./lib/getCurrentPrice.js";
 import { calcMinPriceUnit } from "./lib/calcMinPriceUnit.js";
 import { sellCoin } from "./lib/sellcoin.js";
 import { sellCoins } from "./lib/sellcoins.js";
-import { makeTask } from "./lib/cloudTask.js";
+import { deleteTask, makeTask } from "./lib/cloudTask.js";
 import { sellRoutine } from "./lib/sellRoutine.js";
+import { FieldValue } from "firebase-admin/firestore";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
@@ -131,11 +132,39 @@ app.post("/api/makeTask", async (req: Request, res: Response): Promise<void> => 
   const funcName = req.body.funcName;
   const afterSeconds = req.body.afterSeconds;
   const payload = req.body.payload;
+  const sellSettingdocPath = req.body.sellSettingdocPath;
 
   const stringPayload = JSON.stringify(payload);
 
   try {
-    await makeTask(serviceAccount, funcName, afterSeconds, stringPayload);
+    //기존에 태스크가 있는지 확인
+    //있다면 기존 태스크 삭제
+    const sellSetting = await db.doc(sellSettingdocPath).get();
+    const sellSettingData = sellSetting.data();
+    if(sellSettingData) {
+      const taskId = sellSettingData.taskid;
+      if(taskId) {
+        await deleteTask(taskId);
+        await db.doc(sellSettingdocPath).update({
+          taskid: FieldValue.delete(),
+        });
+      }
+    }
+
+    //태스크 생성
+    const taskId = await makeTask(funcName, afterSeconds, stringPayload);
+
+    //생성한 태스크 이름 db에 저장
+    if(!taskId || taskId === "") {
+      res.status(500).send({
+        message: "failed to create task",
+      });
+      return;
+    }
+    await db.doc(sellSettingdocPath).update({
+      taskid: taskId,
+    });
+
     res.status(200).send({
       message: "task created",
     });

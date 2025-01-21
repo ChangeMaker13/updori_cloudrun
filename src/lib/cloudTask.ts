@@ -11,24 +11,13 @@ const queue = "sellsettingqueue2";
 const location = "asia-northeast3";
 const cloudRunDomain = "https://updori-528826945726.asia-northeast3.run.app";
 
-export async function makeTask(serviceAccount: any, funcName: string, afterSeconds: string, payload: string) {
-  //console.log(funcName, afterSeconds, payload);
-
-  //console.log(serviceAccount);
-
+export async function makeTask(funcName: string, afterSeconds: string, payload: string) : Promise<string> {
   // Task 클라이언트 초기화
   const client = new CloudTasksClient();
 
   // Queue 경로 설정
   const parent = client.queuePath(project, location, queue);
-  //console.log("Queue 경로:", parent);
-
-  const funcURL = `${cloudRunDomain}/${funcName}`; 
-  //const email = `${project}@appspot.gserviceaccount.com`;
-  //console.log(email);
-  //console.log(serviceAccount.client_email);
-
-  console.log(funcURL);
+  const funcURL = `${cloudRunDomain}/${funcName}`;
 
   // Task 생성
   const task = {
@@ -49,15 +38,32 @@ export async function makeTask(serviceAccount: any, funcName: string, afterSecon
     },
   };
 
-  //console.log(task);
-
   let response;
+
   try {
     response = await client.createTask({ parent, task });
     console.log(`response : ${JSON.stringify(response)}`);
     console.log(`Task ${response[0].name} created.`);
+    return response[0].name ?? "";
   } catch (err) {
     console.error("Error creating task:", err);
     throw new Error("Failed to create task");
   }
 }
+
+export async function deleteTask(taskId: string) {
+  const client = new CloudTasksClient();
+
+  try {
+    const parent = client.taskPath(project, location, queue, taskId);
+    await client.getTask({ name: parent });
+    await client.deleteTask({ name: parent });
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 5) { // NOT_FOUND
+      console.log(`Task ${taskId} not found`);
+      return;
+    }
+    throw error;
+  }
+}
+
