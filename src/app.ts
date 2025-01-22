@@ -119,7 +119,7 @@ app.post("/api/sellcoins", async (req: Request, res: Response): Promise<void> =>
   const secret_key = req.body.secret_key;
   const sellCoinsParams = req.body.sellCoinsParams;
 
-  console.log(sellCoinsParams);
+  //console.log(sellCoinsParams);
 
   sellCoins(access_key, secret_key, sellCoinsParams);
 
@@ -180,6 +180,12 @@ app.post("/api/sellRoutine", async (req: Request, res: Response): Promise<void> 
   const secret_key = req.body.secret_key;
   const sellSettingPath = req.body.sellSettingPath;
 
+  const payload = {
+    access_key: access_key,
+    secret_key: secret_key,
+    sellSettingPath: sellSettingPath,
+  };
+
   //24시간 후 다시 실행
   const options = {
     method: "POST",
@@ -190,7 +196,7 @@ app.post("/api/sellRoutine", async (req: Request, res: Response): Promise<void> 
     form: {
       funcName: "api/sellRoutine",
       afterSeconds: "86400",
-      payload: JSON.stringify(req.body),
+      payload: JSON.stringify(payload),
       sellSettingdocPath: sellSettingPath,
     },
   };
@@ -225,7 +231,7 @@ app.get("/api/currentPrice", async (req: Request, res: Response): Promise<void> 
   const currency = req.query.currency;
   const market = "KRW-" + currency;
 
-  console.log(market);
+  //console.log(market);
 
   try {
     const currentPrice = await getCurrentPrice(market);
@@ -260,7 +266,7 @@ app.use((req: Request, res: Response, next: NextFunction): void => {
 
 app.use((error: any, req: Request, res: Response, next: NextFunction): void => {
   if (res.headersSent) {
-    console.log("headers already sent");
+    //console.log("headers already sent");
     return next(error);
   }
   const status = error.status || error.statusCode || 404;

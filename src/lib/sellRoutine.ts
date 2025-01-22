@@ -27,6 +27,7 @@ const queryEncode = qs.encode;
 import admin from "firebase-admin";
 import { cancelAskOrders } from "./cancelAskOrders.js";
 import { sellCoins } from "./sellcoins.js";
+import { log } from "./logger.js";
 
 const server_url = "https://api.upbit.com";
 
@@ -52,38 +53,38 @@ export async function sellRoutine(
   //console.log("2");
   //console.log(sellSettingData?.pricesettings);
   const pricesettings : PriceSetting[] = sellSettingData?.pricesettings;
-  console.log(pricesettings);
+  //console.log(pricesettings);
 
   const parentDocRef = sellSettingRef.parent.parent;
   const parentDoc = await parentDocRef!.get();
   const parentDocData = parentDoc.data();
-  console.log(parentDocData);
+  //console.log(parentDocData);
 
   //해당 부모 doc의 subcollection에서 조회(sellsettingref가 일치하는 문서)
   const scheduledTaskSubcollectionRef = parentDocRef!.collection("scheduledtask");
-  console.log("scheduledTaskSubcollectionRef: ", scheduledTaskSubcollectionRef.path);
+  //console.log("scheduledTaskSubcollectionRef: ", scheduledTaskSubcollectionRef.path);
 
   const coins = await scheduledTaskSubcollectionRef.where("sellsettingref", "==", sellSettingRef).get();
   //const coins = await scheduledTaskSubcollectionRef.get();
+  log(`주문 취소 확인 대상 코인 목록 Coins: ${coins.docs.map(doc => doc.data().currency)}`, "debug");
 
   //해당 코인들에 대해서 이미 걸려있는 모든 매도 주문 삭제
   try{
-    const cancelResult = await cancelAskOrders(access_key, secret_key, coins.docs.map(doc => doc.data().currency));
-    console.log(cancelResult.body);
+    const cancelResult = await cancelAskOrders(access_key, secret_key, coins.docs.map(doc => `KRW-${doc.data().currency}`));
+    log(`기존주문 취소 결과: ${cancelResult.body}`, "production");
+    await new Promise((resolve) => setTimeout(resolve, 3000)); // 3초 대기
   }
   catch(e){
-    console.log(e);
+    log(`Error while cancelling ask orders: ${e}`, "production");
     throw new Error("Error while cancelling ask orders");
   }
-
-  console.log("coins: ", coins.docs);
 
   const sellCoinsParams : SellCoinsParams[] = coins.docs.map(doc => ({
     currency: doc.data().currency,
     priceSettings: pricesettings
   }));
 
-  console.log("sellCoinsParams: ", sellCoinsParams);
+  //console.log("sellCoinsParams: ", sellCoinsParams);
 
   //해당 코인들에 대해서 sell coins 함수 실행
   await sellCoins(access_key, secret_key, sellCoinsParams);
@@ -95,4 +96,6 @@ export async function sellRoutine(
       doc.ref.delete();
     });
   }
+
+  log(`sellRoutine 성공적으로 완료됨`, "production");
 }

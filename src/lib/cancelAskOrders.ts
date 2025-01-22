@@ -16,6 +16,7 @@ import { getAccount } from "./getAccount.js";
 import { getCurrentPrice } from "./getCurrentPrice.js";
 import { calcMinPriceUnit } from "./calcMinPriceUnit.js";
 import querystring from "querystring";
+import { log } from "./logger.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
@@ -24,12 +25,15 @@ const server_url = "https://api.upbit.com";
 export async function cancelAskOrders(
   access_key: string,
   secret_key: string,
-  currencies: string[],
+  markets: string[],
 ): Promise<{ response: any; body: any }> {
   return new Promise(async (resolve, reject) => {
     const params = {
-        quote_currencies: currencies.join(",")
+        pairs: markets.join(","),
+        cancel_side : "ask"
     }
+
+    log(`주문 취소 확인 대상 코인 목록 Params: ${JSON.stringify(params)}`, "production");
 
     const query = querystring.unescape(querystring.encode(params))
 

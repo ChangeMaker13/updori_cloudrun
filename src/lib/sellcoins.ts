@@ -22,7 +22,7 @@ const queryEncode = qs.encode;
 const server_url = "https://api.upbit.com";
 
 export async function sellCoins(access_key: string, secret_key: string, sellCoinsParams: SellCoinsParams[]) {
-  console.log(sellCoinsParams);
+  //console.log(sellCoinsParams);
 
   for (const sellCoinsParam of sellCoinsParams) {
     const { currency, priceSettings } = sellCoinsParam;

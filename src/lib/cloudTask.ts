@@ -5,6 +5,7 @@ import process from "node:process";
 import admin from "firebase-admin";
 
 import { CloudTasksClient } from "@google-cloud/tasks";
+import { log } from "./logger.js";
 
 const project = "updori-ebacb";
 const queue = "sellsettingqueue2";
@@ -42,11 +43,11 @@ export async function makeTask(funcName: string, afterSeconds: string, payload: 
 
   try {
     response = await client.createTask({ parent, task });
-    console.log(`response : ${JSON.stringify(response)}`);
-    console.log(`Task ${response[0].name} created.`);
+    //console.log(`Task ${response[0].name} created.`);
+    log(`Task ${response[0].name} created.`, "production");
     return response[0].name?.split("/").pop() ?? "";
   } catch (err) {
-    console.error("Error creating task:", err);
+    log(`Error creating task: ${err}`, "production");
     throw new Error("Failed to create task");
   }
 }
@@ -58,11 +59,13 @@ export async function deleteTask(taskId: string) {
     const parent = client.taskPath(project, location, queue, taskId);
     await client.getTask({ name: parent });
     await client.deleteTask({ name: parent });
+    log(`Task ${taskId} deleted.`, "production");
   } catch (error) {
     if (error instanceof Error && 'code' in error && (error.code === 7 || error.code === 5)) { // NOT_FOUND
-      console.log(`Task ${taskId} not found`);
+      //console.log(`Task ${taskId} not found`);
       return;
     }
+    log(`Error deleting task ${taskId}: ${error}`, "production");
     throw error;
   }
 }

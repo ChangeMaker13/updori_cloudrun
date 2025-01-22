@@ -19,22 +19,22 @@ export function calcMinPriceUnit(price: number, market: string): number {
   }
   if (price >= 100) {
     if (
-      market == "ADA-KRW" ||
-      market == "ALGO-KRW" ||
-      market == "BLUR-KRW" ||
-      market == "CELO-KRW" ||
-      market == "ELF-KRW" ||
-      market == "EOS-KRW" ||
-      market == "GRS-KRW" ||
-      market == "GRT-KRW" ||
-      market == "ICX-KRW" ||
-      market == "MANA-KRW" ||
-      market == "MINA-KRW" ||
-      market == "POL-KRW" ||
-      market == "SAND-KRW" ||
-      market == "SEI-KRW" ||
-      market == "STG-KRW" ||
-      market == "TRX-KRW"
+      market == "KRW-ADA" ||
+      market == "KRW-ALGO" ||
+      market == "KRW-BLUR" ||
+      market == "KRW-CELO" ||
+      market == "KRW-ELF" ||
+      market == "KRW-EOS" ||
+      market == "KRW-GRS" ||
+      market == "KRW-GRT" ||
+      market == "KRW-ICX" ||
+      market == "KRW-MANA" ||
+      market == "KRW-MINA" ||
+      market == "KRW-POL" ||
+      market == "KRW-SAND" ||
+      market == "KRW-SEI" ||
+      market == "KRW-STG" ||
+      market == "KRW-TRX"
     ) {
       return 1;
     }
