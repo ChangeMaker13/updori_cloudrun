@@ -71,9 +71,14 @@ export async function sellRoutine(
   //해당 코인들에 대해서 이미 걸려있는 모든 매도 주문 삭제
   try{
     if(coins.docs.length > 0){
-      const cancelResult = await cancelAskOrders(access_key, secret_key, coins.docs.map(doc => `KRW-${doc.data().currency}`));
-      mylog(`기존주문 취소 결과: ${cancelResult.body}`, "production");
-      await new Promise((resolve) => setTimeout(resolve, 3000)); // 3초 대기(주문 취소하고 바로 주문 하면 업비트가 변경된 주문 가능 금액을 감지를 못함)
+
+      const coinsList = coins.docs.map(doc => `KRW-${doc.data().currency}`);
+      for(let i = 0; i < coinsList.length; i += 20) {
+        const chunk = coinsList.slice(i, i + 20);
+        const cancelResult = await cancelAskOrders(access_key, secret_key, chunk);
+        mylog(`기존주문 취소 결과 (${i+1}~${Math.min(i+20, coinsList.length)}번째): ${cancelResult.body}`, "production");
+        await new Promise((resolve) => setTimeout(resolve, 3000)); // 3초 대기(요청 횟수 제한 우회)
+      }
     }
   }
   catch(e){
