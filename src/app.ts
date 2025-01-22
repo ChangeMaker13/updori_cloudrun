@@ -178,7 +178,7 @@ app.post("/api/makeTask", async (req: Request, res: Response): Promise<void> => 
 app.post("/api/sellRoutine", async (req: Request, res: Response): Promise<void> => {
   const access_key = req.body.access_key;
   const secret_key = req.body.secret_key;
-  const sellSettingId = req.body.sellSettingId;
+  const sellSettingPath = req.body.sellSettingPath;
 
   //24시간 후 다시 실행
   const options = {
@@ -190,7 +190,8 @@ app.post("/api/sellRoutine", async (req: Request, res: Response): Promise<void> 
     form: {
       funcName: "api/sellRoutine",
       afterSeconds: "86400",
-      payload: req.body,
+      payload: JSON.stringify(req.body),
+      sellSettingdocPath: sellSettingPath,
     },
   };
   request(options, function (error, response) {
@@ -199,7 +200,7 @@ app.post("/api/sellRoutine", async (req: Request, res: Response): Promise<void> 
   });
 
   try {
-    await sellRoutine(db, access_key, secret_key, sellSettingId);
+    await sellRoutine(db, access_key, secret_key, sellSettingPath);
   } catch (error) {
     res.status(500).send({
       message: "internal server error: " + error,
