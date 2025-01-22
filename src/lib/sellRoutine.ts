@@ -72,7 +72,7 @@ export async function sellRoutine(
   try{
     const cancelResult = await cancelAskOrders(access_key, secret_key, coins.docs.map(doc => `KRW-${doc.data().currency}`));
     log(`기존주문 취소 결과: ${cancelResult.body}`, "production");
-    await new Promise((resolve) => setTimeout(resolve, 3000)); // 3초 대기
+    await new Promise((resolve) => setTimeout(resolve, 3000)); // 3초 대기(주문 취소하고 바로 주문 하면 업비트가 변경된 주문 가능 금액을 감지를 못함)
   }
   catch(e){
     log(`Error while cancelling ask orders: ${e}`, "production");
