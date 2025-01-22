@@ -30,6 +30,7 @@ import { sellCoins } from "./lib/sellcoins.js";
 import { deleteTask, makeTask } from "./lib/cloudTask.js";
 import { sellRoutine } from "./lib/sellRoutine.js";
 import { FieldValue } from "firebase-admin/firestore";
+import { log } from "firebase-functions/logger";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
@@ -203,7 +204,12 @@ app.post("/api/sellRoutine", async (req: Request, res: Response): Promise<void> 
   try {
     await new Promise((resolve, reject) => {
       request(options, function (error, response) {
-        if (error) reject(error);
+        if (error){
+          log(`Error while making task: ${error}`, "production");
+          reject(error);
+        }
+
+        log(`Task created successfully`, "production");
         resolve(response);
       });
     });
