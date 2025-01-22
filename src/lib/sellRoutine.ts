@@ -70,9 +70,11 @@ export async function sellRoutine(
 
   //해당 코인들에 대해서 이미 걸려있는 모든 매도 주문 삭제
   try{
-    const cancelResult = await cancelAskOrders(access_key, secret_key, coins.docs.map(doc => `KRW-${doc.data().currency}`));
-    mylog(`기존주문 취소 결과: ${cancelResult.body}`, "production");
-    await new Promise((resolve) => setTimeout(resolve, 3000)); // 3초 대기(주문 취소하고 바로 주문 하면 업비트가 변경된 주문 가능 금액을 감지를 못함)
+    if(coins.docs.length > 0){
+      const cancelResult = await cancelAskOrders(access_key, secret_key, coins.docs.map(doc => `KRW-${doc.data().currency}`));
+      mylog(`기존주문 취소 결과: ${cancelResult.body}`, "production");
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // 3초 대기(주문 취소하고 바로 주문 하면 업비트가 변경된 주문 가능 금액을 감지를 못함)
+    }
   }
   catch(e){
     mylog(`Error while cancelling ask orders: ${e}`, "production");
@@ -87,7 +89,15 @@ export async function sellRoutine(
   //console.log("sellCoinsParams: ", sellCoinsParams);
 
   //해당 코인들에 대해서 sell coins 함수 실행
-  await sellCoins(access_key, secret_key, sellCoinsParams);
+  try{
+    if(sellCoinsParams.length > 0){
+      await sellCoins(access_key, secret_key, sellCoinsParams);
+    }
+  }
+  catch(e){
+    mylog(`Error while selling coins: ${e}`, "production");
+    throw new Error("Error while selling coins");
+  }
 
   //작업이 끝났다면 반복 여부에 따라서 문서 삭제할지 말지 결정
   if (!sellSettingData?.shouldrepeat) {
