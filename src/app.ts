@@ -194,10 +194,19 @@ app.post("/api/sellRoutine", async (req: Request, res: Response): Promise<void> 
       sellSettingdocPath: sellSettingPath,
     },
   };
-  request(options, function (error, response) {
-    if (error) throw new Error(error);
-    console.log(response.body);
-  });
+  try {
+    await new Promise((resolve, reject) => {
+      request(options, function (error, response) {
+        if (error) reject(error);
+        resolve(response);
+      });
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "internal server error: " + error,
+    });
+    return;
+  }
 
   try {
     await sellRoutine(db, access_key, secret_key, sellSettingPath);
