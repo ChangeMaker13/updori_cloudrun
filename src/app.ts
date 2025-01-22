@@ -35,7 +35,7 @@ const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
 
-const cloud_run_url = process.env["NODE_ENV"] === "production" ? "https://updori-cloud-run-default-rtdb.firebaseio.com" : "http://localhost:8080";
+const cloud_run_url = process.env["NODE_ENV"] === "production" ? "https://updori-528826945726.asia-northeast3.run.app" : "http://localhost:8080";
 
 const db = admin.firestore();
 
@@ -197,7 +197,7 @@ app.post("/api/sellRoutine", async (req: Request, res: Response): Promise<void> 
     body: JSON.stringify({
       funcName: "api/sellRoutine",
       afterSeconds: "86400",
-      payload: JSON.stringify(payload),
+      payload: payload,
       sellSettingdocPath: sellSettingPath,
     }),
   };
