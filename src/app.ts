@@ -191,14 +191,14 @@ app.post("/api/sellRoutine", async (req: Request, res: Response): Promise<void> 
     method: "POST",
     url: cloud_run_url + "/api/makeTask",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
     },
-    form: {
+    body: JSON.stringify({
       funcName: "api/sellRoutine",
       afterSeconds: "86400",
       payload: JSON.stringify(payload),
       sellSettingdocPath: sellSettingPath,
-    },
+    }),
   };
   try {
     await new Promise((resolve, reject) => {
