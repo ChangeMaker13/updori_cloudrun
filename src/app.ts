@@ -181,6 +181,15 @@ app.post("/api/sellRoutine", async (req: Request, res: Response): Promise<void> 
   const secret_key = req.body.secret_key;
   const sellSettingPath = req.body.sellSettingPath;
 
+  const sellSetting = await db.doc(sellSettingPath).get();
+  if(!sellSetting.exists){
+    mylog(`sellSetting not found: ${sellSettingPath}`, "production");
+    res.status(200).send({
+      message: "deleted sellSetting",
+    });
+    return;
+  }
+
   const payload = {
     access_key: access_key,
     secret_key: secret_key,
