@@ -27,7 +27,7 @@ const queryEncode = qs.encode;
 import admin from "firebase-admin";
 import { cancelAskOrders } from "./cancelAskOrders.js";
 import { sellCoins } from "./sellcoins.js";
-import { log } from "./logger.js";
+import { mylog } from "./logger.js";
 
 const server_url = "https://api.upbit.com";
 
@@ -66,16 +66,16 @@ export async function sellRoutine(
 
   const coins = await scheduledTaskSubcollectionRef.where("sellsettingref", "==", sellSettingRef).get();
   //const coins = await scheduledTaskSubcollectionRef.get();
-  log(`주문 취소 확인 대상 코인 목록 Coins: ${coins.docs.map(doc => doc.data().currency)}`, "debug");
+  mylog(`주문 취소 확인 대상 코인 목록 Coins: ${coins.docs.map(doc => doc.data().currency)}`, "debug");
 
   //해당 코인들에 대해서 이미 걸려있는 모든 매도 주문 삭제
   try{
     const cancelResult = await cancelAskOrders(access_key, secret_key, coins.docs.map(doc => `KRW-${doc.data().currency}`));
-    log(`기존주문 취소 결과: ${cancelResult.body}`, "production");
+    mylog(`기존주문 취소 결과: ${cancelResult.body}`, "production");
     await new Promise((resolve) => setTimeout(resolve, 3000)); // 3초 대기(주문 취소하고 바로 주문 하면 업비트가 변경된 주문 가능 금액을 감지를 못함)
   }
   catch(e){
-    log(`Error while cancelling ask orders: ${e}`, "production");
+    mylog(`Error while cancelling ask orders: ${e}`, "production");
     throw new Error("Error while cancelling ask orders");
   }
 
@@ -97,5 +97,5 @@ export async function sellRoutine(
     });
   }
 
-  log(`sellRoutine 성공적으로 완료됨`, "production");
+  mylog(`sellRoutine 성공적으로 완료됨`, "production");
 }

@@ -16,7 +16,7 @@ import { getAccount } from "./getAccount.js";
 import { getCurrentPrice } from "./getCurrentPrice.js";
 import { calcMinPriceUnit } from "./calcMinPriceUnit.js";
 import querystring from "querystring";
-import { log } from "./logger.js";
+import { mylog } from "./logger.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
@@ -33,7 +33,7 @@ export async function cancelAskOrders(
         cancel_side : "ask"
     }
 
-    log(`주문 취소 확인 대상 코인 목록 Params: ${JSON.stringify(params)}`, "production");
+    mylog(`주문 취소 확인 대상 코인 목록 Params: ${JSON.stringify(params)}`, "production");
 
     const query = querystring.unescape(querystring.encode(params))
 
