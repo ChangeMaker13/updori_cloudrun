@@ -1,1 +1,1 @@
-{"version":3,"file":"cloudTask.d.ts","sourceRoot":"","sources":["../../src/lib/cloudTask.ts"],"names":[],"mappings":"AAiBA,wBAAsB,QAAQ,CAAC,QAAQ,EAAE,MAAM,EAAE,YAAY,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,iBAsCrF"}
+{"version":3,"file":"cloudTask.d.ts","sourceRoot":"","sources":["../../src/lib/cloudTask.ts"],"names":[],"mappings":"AAcA,wBAAsB,QAAQ,CAAC,QAAQ,EAAE,MAAM,EAAE,YAAY,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,GAAI,OAAO,CAAC,MAAM,CAAC,CAsCxG;AAED,wBAAsB,UAAU,CAAC,MAAM,EAAE,MAAM,iBAgB9C"}

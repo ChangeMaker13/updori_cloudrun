@@ -1,0 +1,1 @@
+{"version":3,"file":"cancelAskOrders.d.ts","sourceRoot":"","sources":["../../src/lib/cancelAskOrders.ts"],"names":[],"mappings":"AAwBA,wBAAsB,eAAe,CACnC,UAAU,EAAE,MAAM,EAClB,UAAU,EAAE,MAAM,EAClB,OAAO,EAAE,MAAM,EAAE,GAChB,OAAO,CAAC;IAAE,QAAQ,EAAE,GAAG,CAAC;IAAC,IAAI,EAAE,GAAG,CAAA;CAAE,CAAC,CAsCvC"}

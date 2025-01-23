@@ -31,7 +31,7 @@ import { deleteTask, makeTask } from "./lib/cloudTask.js";
 import { sellRoutine } from "./lib/sellRoutine.js";
 import { FieldValue } from "firebase-admin/firestore";
 import { mylog } from "./lib/logger.js";
-import { getCurrentPrices } from "lib/getCurrentPrices.js";
+import { getCurrentPrices } from "./lib/getCurrentPrices.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
