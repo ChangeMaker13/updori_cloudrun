@@ -31,6 +31,7 @@ import { deleteTask, makeTask } from "./lib/cloudTask.js";
 import { sellRoutine } from "./lib/sellRoutine.js";
 import { FieldValue } from "firebase-admin/firestore";
 import { mylog } from "./lib/logger.js";
+import { getCurrentPrices } from "lib/getCurrentPrices.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
@@ -254,6 +255,27 @@ app.get("/api/currentPrice", async (req: Request, res: Response): Promise<void> 
     const currentPrice = await getCurrentPrice(market);
     res.status(200).send({
       currentPrice: currentPrice,
+    });
+  } catch (error) {
+    if(error instanceof Error && error.message === "Currency not found") {
+      res.status(404).send({
+        message: "Currency not found",
+      });
+    } else {
+      res.status(500).send({
+        message: "internal server error: " + error,
+      });
+    }
+  }
+});
+
+app.get("/api/currentPrices", async (req: Request, res: Response): Promise<void> => {
+  const markets = req.query.markets;
+
+  try {
+    const currentPrices = await getCurrentPrices(markets as string);
+    res.status(200).send({
+      currentPrices: currentPrices,
     });
   } catch (error) {
     if(error instanceof Error && error.message === "Currency not found") {
