@@ -59,5 +59,5 @@ export function calcMinPriceUnit(price: number, market: string): number {
     return 0.0000001;
   }
 
-  return 1;
+  return 0.00000001;
 }

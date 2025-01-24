@@ -17,6 +17,7 @@ import { getCurrentPrice } from "./getCurrentPrice.js";
 import { calcMinPriceUnit } from "./calcMinPriceUnit.js";
 import { SellCoinsParams } from "../types.js";
 import { sellCoin } from "./sellcoin.js";
+import { mylog } from "./logger.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
@@ -42,17 +43,24 @@ export async function sellCoins(access_key: string, secret_key: string, sellCoin
 
     // 코인 현재가 조회
     const currentPrice: number = await getCurrentPrice(market);
-    const minPriceUnit = calcMinPriceUnit(currentPrice, market);
     //let sellPrice = currentPrice * (1 + price * 0.01);
     //console.log("sellPrice before", sellPrice);
     //sellPrice = Math.round(sellPrice / minPriceUnit) * minPriceUnit;
 
+    let availableBalance = currentBalance;
+    mylog(`${availableBalance} 주문가능`, "debug");
+
     for (const priceSetting of priceSettings) {
       await new Promise((resolve) => setTimeout(resolve, 300)); // 초당 요청수 제한을 회피하기 위해 주문 딜레이 추가
       const { amount, price } = priceSetting;
-      const amountnum = currentBalance * (amount * 0.01);
+      let amountnum = currentBalance * (amount * 0.01);
+      mylog(`${amountnum} 주문시도, ${availableBalance} 주문가능`, "debug");
+      if(availableBalance < amountnum){
+        amountnum = availableBalance;
+      }
       let pricenum = currentPrice * (1 + price * 0.01);
-      pricenum = Math.round(pricenum / minPriceUnit) * minPriceUnit;
+      const minPriceUnit = calcMinPriceUnit(pricenum, market);
+      pricenum = Math.floor(pricenum / minPriceUnit) * minPriceUnit;
 
       const result = await sellCoin(access_key, secret_key, amountnum, pricenum, currency, market);
 
@@ -60,8 +68,10 @@ export async function sellCoins(access_key: string, secret_key: string, sellCoin
 
       if (result.response.statusCode === 201) {
         console.log(`${currency} 매도 완료`);
+        availableBalance -= amountnum;
       } else {
         console.log(`${currency} 매도 실패`);
+        mylog(`수량 : ${amountnum}, 가격 : ${pricenum}, 계산된 최소단위 : ${minPriceUnit}`, "production");
         console.log(result.body);
       }
     }

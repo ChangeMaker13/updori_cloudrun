@@ -30,7 +30,8 @@ export async function cancelAskOrders(
   return new Promise(async (resolve, reject) => {
     const params = {
         pairs: markets.join(","),
-        cancel_side : "ask"
+        cancel_side : "ask",
+        count : 300
     }
 
     mylog(`주문 취소 확인 대상 코인 목록 Params: ${JSON.stringify(params)}`, "production");

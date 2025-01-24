@@ -28,6 +28,7 @@ import admin from "firebase-admin";
 import { cancelAskOrders } from "./cancelAskOrders.js";
 import { sellCoins } from "./sellcoins.js";
 import { mylog } from "./logger.js";
+import { checkOpenOrder } from "./checkOpenORder.js";
 
 const server_url = "https://api.upbit.com";
 
@@ -71,12 +72,20 @@ export async function sellRoutine(
   //해당 코인들에 대해서 이미 걸려있는 모든 매도 주문 삭제
   try{
     if(coins.docs.length > 0){
-
       const coinsList = coins.docs.map(doc => `KRW-${doc.data().currency}`);
-      for(let i = 0; i < coinsList.length; i += 20) {
-        const chunk = coinsList.slice(i, i + 20);
+      const checkedCoinList = [];
+      for(const coin of coinsList){
+        const checked = await checkOpenOrder(access_key, secret_key, coin);
+        if(checked){
+          checkedCoinList.push(coin);
+        }
+        await new Promise((resolve) => setTimeout(resolve, 50)); // 50ms 지연
+      }
+
+      for(let i = 0; i < checkedCoinList.length; i += 20) {
+        const chunk = checkedCoinList.slice(i, i + 20);
         const cancelResult = await cancelAskOrders(access_key, secret_key, chunk);
-        mylog(`기존주문 취소 결과 (${i+1}~${Math.min(i+20, coinsList.length)}번째): ${cancelResult.body}`, "production");
+        mylog(`기존주문 취소 결과 (${i+1}~${Math.min(i+20, checkedCoinList.length)}번째): ${cancelResult.body}`, "production");
         await new Promise((resolve) => setTimeout(resolve, 3000)); // 3초 대기(요청 횟수 제한 우회)
       }
     }
@@ -85,6 +94,7 @@ export async function sellRoutine(
     mylog(`Error while cancelling ask orders: ${e}`, "production");
     throw new Error("Error while cancelling ask orders");
   }
+  await new Promise((resolve) => setTimeout(resolve, 5000)); // 5초 대기
 
   const sellCoinsParams : SellCoinsParams[] = coins.docs.map(doc => ({
     currency: doc.data().currency,
