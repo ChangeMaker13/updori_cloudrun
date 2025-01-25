@@ -28,7 +28,7 @@ import admin from "firebase-admin";
 import { cancelAskOrders } from "./cancelAskOrders.js";
 import { sellCoins } from "./sellcoins.js";
 import { mylog } from "./logger.js";
-import { checkOpenOrder } from "./checkOpenORder.js";
+import { checkOpenOrder } from "./checkOpenOrder.js";
 
 const server_url = "https://api.upbit.com";
 
