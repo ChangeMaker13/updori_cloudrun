@@ -32,6 +32,7 @@ import { sellRoutine } from "./lib/sellRoutine.js";
 import { FieldValue } from "firebase-admin/firestore";
 import { mylog } from "./lib/logger.js";
 import { getCurrentPrices } from "./lib/getCurrentPrices.js";
+import { getKoreanNames } from "lib/getKoreanNames.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
@@ -54,6 +55,11 @@ app.get("/checkOutboundIP", (req: Request, res: Response): void => {
       }
       res.send(JSON.parse(body).ip);
   });
+});
+
+app.get("/api/getKoreanNames", async (req: Request, res: Response): Promise<void> => {
+  const koreanNames = await getKoreanNames();
+  res.send(koreanNames);
 });
 
 app.post("/api/verifytoken", async (req: Request, res: Response): Promise<void> => {
