@@ -32,7 +32,7 @@ import { sellRoutine } from "./lib/sellRoutine.js";
 import { FieldValue } from "firebase-admin/firestore";
 import { mylog } from "./lib/logger.js";
 import { getCurrentPrices } from "./lib/getCurrentPrices.js";
-import { getKoreanNames } from "lib/getKoreanNames.js";
+import { getKoreanNames } from "./lib/getKoreanNames.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
