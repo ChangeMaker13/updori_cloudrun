@@ -34,7 +34,7 @@ import { mylog } from "./lib/logger.js";
 import { getCurrentPrices } from "./lib/getCurrentPrices.js";
 import { getKoreanNames } from "./lib/getKoreanNames.js";
 import { cancelAskOrders } from "./lib/cancelAskOrders.js";
-import { TRACE_SAMPLED_KEY } from "@google-cloud/logging/build/src/entry.js";
+import { checkOpenOrder } from "./lib/checkOpenOrder.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
@@ -70,8 +70,26 @@ app.post("/api/cancelAskOrders", async (req: Request, res: Response): Promise<vo
   const markets = req.body.markets;
 
   try{
-    const result = await cancelAskOrders(access_key, secret_key, markets); // 주문 취소 함수
-    res.send(result);
+    if(markets.length > 0){
+      const checkedCoinList = [];
+      for(const market of markets){
+        const checked = await checkOpenOrder(access_key, secret_key, market);
+        if(checked){
+          checkedCoinList.push(market);
+        }
+        await new Promise((resolve) => setTimeout(resolve, 50)); // 50ms 지연
+      }
+
+      for(let i = 0; i < checkedCoinList.length; i += 20) {
+        const chunk = checkedCoinList.slice(i, i + 20);
+        const cancelResult = await cancelAskOrders(access_key, secret_key, chunk);
+        mylog(`기존주문 취소 결과 (${i+1}~${Math.min(i+20, checkedCoinList.length)}번째): ${cancelResult.body}`, "production");
+        await new Promise((resolve) => setTimeout(resolve, 3000)); // 3초 대기(요청 횟수 제한 우회)
+      }
+    }
+    res.status(200).send({
+      message: "주문 취소 완료",
+    });
   } catch (error) {
     res.status(500).send({
       message: "internal server error: " + error,
