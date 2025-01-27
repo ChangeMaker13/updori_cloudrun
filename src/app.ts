@@ -33,6 +33,8 @@ import { FieldValue } from "firebase-admin/firestore";
 import { mylog } from "./lib/logger.js";
 import { getCurrentPrices } from "./lib/getCurrentPrices.js";
 import { getKoreanNames } from "./lib/getKoreanNames.js";
+import { cancelAskOrders } from "./lib/cancelAskOrders.js";
+import { TRACE_SAMPLED_KEY } from "@google-cloud/logging/build/src/entry.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
@@ -60,6 +62,21 @@ app.get("/checkOutboundIP", (req: Request, res: Response): void => {
 app.get("/api/getKoreanNames", async (req: Request, res: Response): Promise<void> => {
   const koreanNames = await getKoreanNames();
   res.send(koreanNames);
+});
+
+app.post("/api/cancelAskOrders", async (req: Request, res: Response): Promise<void> => {
+  const access_key = req.body.access_key;
+  const secret_key = req.body.secret_key;
+  const markets = req.body.markets;
+
+  try{
+    const result = await cancelAskOrders(access_key, secret_key, markets); // 주문 취소 함수
+    res.send(result);
+  } catch (error) {
+    res.status(500).send({
+      message: "internal server error: " + error,
+    });
+  }
 });
 
 app.post("/api/verifytoken", async (req: Request, res: Response): Promise<void> => {
