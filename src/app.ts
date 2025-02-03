@@ -35,6 +35,7 @@ import { getCurrentPrices } from "./lib/getCurrentPrices.js";
 import { getKoreanNames } from "./lib/getKoreanNames.js";
 import { cancelAskOrders } from "./lib/cancelAskOrders.js";
 import { checkOpenOrder } from "./lib/checkOpenOrder.js";
+import { logHistory } from "lib/logHistory.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
@@ -62,6 +63,65 @@ app.get("/checkOutboundIP", (req: Request, res: Response): void => {
 app.get("/api/getKoreanNames", async (req: Request, res: Response): Promise<void> => {
   const koreanNames = await getKoreanNames();
   res.send(koreanNames);
+});
+
+app.post("/api/logHistory", async (req: Request, res: Response): Promise<void> => {
+  const access_key = req.body.access_key;
+  const secret_key = req.body.secret_key;
+  const user_path = req.body.user_path;
+
+  // 24시간 후 다시 실행
+  const payload = {
+    access_key: access_key,
+    secret_key: secret_key,
+    user_path: user_path,
+  };
+
+  //24시간 후 다시 실행
+  const options = {
+    method: "POST",
+    url: cloud_run_url + "/api/makeTask",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      funcName: "api/logHistory",
+      afterSeconds: "86400",
+      payload: payload,
+      sellSettingdocPath: user_path,
+    }),
+  };
+
+  mylog(`task create request options: ${JSON.stringify(options)}`, "production");
+  try {
+    await new Promise((resolve, reject) => {
+      request(options, function (error, response) {
+        if (error){
+          mylog(`Error while making task: ${error}`, "production");
+          reject(error);
+        }
+
+        mylog(`Task created successfully`, "production");
+        resolve(response);
+      });
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "internal server error: " + error,
+    });
+    return;
+  }
+
+  try {
+    await logHistory(db, access_key, secret_key, user_path);
+    res.status(200).send({
+      message: "로그 기록 완료",
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "내부 서버 오류: " + error,
+    });
+  }
 });
 
 app.post("/api/cancelAskOrders", async (req: Request, res: Response): Promise<void> => {
