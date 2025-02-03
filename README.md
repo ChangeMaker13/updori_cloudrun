@@ -1,3 +1,7 @@
+npm run prebuild
+npm run build
+npm run start
+
 # Overview
 
 This is a starter Node.js app configured for TypeScript. The app is generated

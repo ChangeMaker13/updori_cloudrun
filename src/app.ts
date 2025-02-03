@@ -35,7 +35,7 @@ import { getCurrentPrices } from "./lib/getCurrentPrices.js";
 import { getKoreanNames } from "./lib/getKoreanNames.js";
 import { cancelAskOrders } from "./lib/cancelAskOrders.js";
 import { checkOpenOrder } from "./lib/checkOpenOrder.js";
-import { logHistory } from "lib/logHistory.js";
+import { logHistory } from "./lib/logHistory.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
