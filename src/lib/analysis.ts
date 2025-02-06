@@ -2,6 +2,7 @@ import axios from "axios";
 import { mylog } from "./logger.js";
 import admin from "firebase-admin";
 import { getCandleData } from "./getCandleData.js";
+import { getKoreanNames } from "./getKoreanNames.js";
 
 export async function analysis(
     db : admin.firestore.Firestore,
@@ -15,8 +16,12 @@ export async function analysis(
   ) {
     const result: any[] = [];
 
+    const koreanNames = await getKoreanNames();
+    const koreanNamesMap = new Map(koreanNames.map((item: any) => [item.market, item.korean_name]));
+
     try {
         //users/history 컬렉션에서 logtime을 이용해 최근 6개월 간의 데이터를 가져온다
+
         const history = await db.doc(user_path).collection("history").orderBy("logtime", "desc").limit(180).get();
 
         for(const doc of history.docs) {
@@ -47,8 +52,10 @@ export async function analysis(
                     day: logtimeDate.getDate(),
 
                     symbol: currency,
-                    name: currency, // 실제 한글 이름이 필요하다면 매핑 테이블 필요
+                    name: koreanNamesMap.get(`KRW-${currency}`) || currency,
                     percentage: Math.floor(priceIncrease)
+
+
                 });
 
                 
@@ -125,6 +132,14 @@ export async function analysis(
         excelData.rows.push(row);
       });
     });
+
+    // 날짜를 역순으로 재정렬
+    excelData.rows.sort((a, b) => {
+      const dateA = new Date(a.date.replace('월', '-').replace('일', ''));
+      const dateB = new Date(b.date.replace('월', '-').replace('일', ''));
+      return dateA.getTime() - dateB.getTime();
+    });
+
 
     // 합계 행 추가
     const totalRow: ExcelRow = {
