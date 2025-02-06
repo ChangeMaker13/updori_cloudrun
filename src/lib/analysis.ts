@@ -38,7 +38,7 @@ export async function analysis(
                     continue;
                 }
                 const candleData = await getCandleData(`KRW-${currency}`, formattedLogtime);  
-                //console.log(candleData);
+
                 if(candleData === null) {
                     continue;
                 }
@@ -54,8 +54,6 @@ export async function analysis(
                     symbol: currency,
                     name: koreanNamesMap.get(`KRW-${currency}`) || currency,
                     percentage: Math.floor(priceIncrease)
-
-
                 });
 
                 
@@ -63,7 +61,7 @@ export async function analysis(
         }
         //console.log(result);
         const excelData = await formatExcelData(result, start_price, end_price);
-        console.log(JSON.stringify(excelData, null, 2));
+        //console.log(JSON.stringify(excelData, null, 2));
 
         return excelData;
 
@@ -127,7 +125,6 @@ export async function analysis(
           const key = `${i}%`;
           row.percentages[key] = i <= high ? i : null;
         }
-  
 
         excelData.rows.push(row);
       });
@@ -159,6 +156,8 @@ export async function analysis(
     }
 
     excelData.rows.push(totalRow);
+
+    //console.log(excelData);
   
     return excelData;
   }

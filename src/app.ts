@@ -76,6 +76,7 @@ app.post("/api/analysis", async (req: Request, res: Response): Promise<void> => 
   const user_path = req.body.user_path;
   
   const analysisResult = await analysis(db, access_key, secret_key, start_date, end_date, start_price, end_price, user_path);
+  //console.log(analysisResult);
   res.send(analysisResult);
 });
 

@@ -41,13 +41,13 @@ async function getCandleData(
 
     try {
         // 50ms 유예
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         // API 요청
         const response = await axios.get('https://api.upbit.com/v1/candles/days', {
             params: {
                 'market': market,
-                'to': `${date} 00:00:00`,
+                'to': `${date} 09:00:00`,
                 'count': 100
             }
         });
@@ -88,8 +88,9 @@ async function getCandleDataRange(
         const response = await axios.get('https://api.upbit.com/v1/candles/days', {
             params: {
                 'market': market,
-                'to': `${endDate} 00:00:00`,
+                'to': `${endDate} 09:00:00`,
                 'count': daysDiff + 1
+
             }
         });
 
