@@ -32,6 +32,28 @@ export async function analysis(
             const formattedLogtime = `${logtimeDate.getFullYear()}-${(logtimeDate.getMonth() + 1).toString().padStart(2, '0')}-${logtimeDate.getDate().toString().padStart(2, '0')}`;
             //console.log(currencies, formattedLogtime);
 
+            const logtimeYear = logtimeDate.getFullYear();
+            const logtimeMonth = logtimeDate.getMonth() + 1;
+            const logtimeDay = logtimeDate.getDate();
+
+            const startDate = new Date(start_date);
+            const endDate = new Date(end_date);
+
+            const startYear = startDate.getFullYear();
+            const startMonth = startDate.getMonth() + 1;
+            const startDay = startDate.getDate();
+
+            const endYear = endDate.getFullYear();
+            const endMonth = endDate.getMonth() + 1;
+            const endDay = endDate.getDate();
+
+            const isWithinRange = (logtimeYear > startYear || (logtimeYear === startYear && (logtimeMonth > startMonth || (logtimeMonth === startMonth && logtimeDay >= startDay)))) &&
+                                  (logtimeYear < endYear || (logtimeYear === endYear && (logtimeMonth < endMonth || (logtimeMonth === endMonth && logtimeDay <= endDay))));
+
+            if (!isWithinRange) {
+                continue;
+            }
+
             for (const currency of currencies) {
                 //console.log(`Currency: ${currency}`);
                 if(currency === "KRW") {
