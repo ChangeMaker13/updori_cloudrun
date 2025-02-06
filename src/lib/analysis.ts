@@ -81,8 +81,7 @@ export async function analysis(
                 
             }
         }
-        //console.log(result);
-        const excelData = await formatExcelData(result, start_price, end_price);
+        const excelData = await formatExcelData(result, Number(start_price), Number(end_price));
         //console.log(JSON.stringify(excelData, null, 2));
 
         return excelData;
@@ -125,7 +124,7 @@ export async function analysis(
     for (let i = start_price; i <= end_price; i++) {
       headers.push(`${i}%`);
     }
-  
+    
     const excelData = {
       headers,
       rows: [] as ExcelRow[]
