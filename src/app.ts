@@ -85,7 +85,6 @@ app.post("/api/logHistory", async (req: Request, res: Response): Promise<void> =
   const secret_key = req.body.secret_key;
   const user_path = req.body.user_path;
 
-  // 24시간 후 다시 실행
   const payload = {
     access_key: access_key,
     secret_key: secret_key,
@@ -101,7 +100,7 @@ app.post("/api/logHistory", async (req: Request, res: Response): Promise<void> =
     },
     body: JSON.stringify({
       funcName: "api/logHistory",
-      afterSeconds: "86400",
+      afterSeconds: "3600",
       payload: payload,
       sellSettingdocPath: user_path,
     }),

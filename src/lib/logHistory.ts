@@ -28,23 +28,36 @@ export async function logHistory(db : admin.firestore.Firestore, access_key : st
     
         console.log(hist);
     
-        // 이미 해당 날짜에 로그 기록이 있는지 확인
+        // 현재 시간 기준으로 오늘의 오전 9시와 내일 오전 9시 계산
         const now = new Date();
-        const twelveHoursAgo = new Date(now.getTime() - (12 * 60 * 60 * 1000));
+        const today9am = new Date(now);
+        today9am.setHours(9, 0, 0, 0);
+        
+        const tomorrow9am = new Date(now);
+        tomorrow9am.setDate(tomorrow9am.getDate() + 1);
+        tomorrow9am.setHours(9, 0, 0, 0);
+
+        // 현재 시간이 오전 9시 이전이면 어제 9시부터 오늘 9시까지
+        // 현재 시간이 오전 9시 이후면 오늘 9시부터 내일 9시까지
+        const startTime = now.getHours() < 9 ? 
+            new Date(today9am.getTime() - 24 * 60 * 60 * 1000) : today9am;
+        const endTime = now.getHours() < 9 ? today9am : tomorrow9am;
+
+        // 해당 기간 내의 기록 확인
         const history = await db.doc(user_path).collection("history")
-          .where("logtime", ">=", twelveHoursAgo)
-          .where("logtime", "<=", now)
+          .where("logtime", ">=", startTime)
+          .where("logtime", "<=", endTime)
           .get();
-    
+
         if(history.size > 0){
           await db.doc(user_path).collection("history").doc(history.docs[0].id).update({
-            logtime : hist.logtime,
+            logtime : startTime,
             currencies : hist.currencies
           });
         }
         else{
           await db.doc(user_path).collection("history").add({
-            logtime : hist.logtime,
+            logtime : startTime,
             currencies : hist.currencies
           });
         }
