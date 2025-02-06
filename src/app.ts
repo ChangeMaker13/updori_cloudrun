@@ -36,6 +36,7 @@ import { getKoreanNames } from "./lib/getKoreanNames.js";
 import { cancelAskOrders } from "./lib/cancelAskOrders.js";
 import { checkOpenOrder } from "./lib/checkOpenOrder.js";
 import { logHistory } from "./lib/logHistory.js";
+import { analysis } from "./lib/analysis.js";
 const queryEncode = qs.encode;
 
 const server_url = "https://api.upbit.com";
@@ -63,6 +64,19 @@ app.get("/checkOutboundIP", (req: Request, res: Response): void => {
 app.get("/api/getKoreanNames", async (req: Request, res: Response): Promise<void> => {
   const koreanNames = await getKoreanNames();
   res.send(koreanNames);
+});
+
+app.post("/api/analysis", async (req: Request, res: Response): Promise<void> => {
+  const access_key = req.body.access_key;
+  const secret_key = req.body.secret_key;
+  const start_date = req.body.start_date;
+  const end_date = req.body.end_date;
+  const start_price = req.body.start_price;
+  const end_price = req.body.end_price;
+  const user_path = req.body.user_path;
+  
+  const analysisResult = await analysis(db, access_key, secret_key, start_date, end_date, start_price, end_price, user_path);
+  res.send(analysisResult);
 });
 
 app.post("/api/logHistory", async (req: Request, res: Response): Promise<void> => {
