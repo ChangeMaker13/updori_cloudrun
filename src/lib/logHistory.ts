@@ -29,19 +29,23 @@ export async function logHistory(db : admin.firestore.Firestore, access_key : st
         console.log(hist);
     
         // 현재 시간 기준으로 오늘의 오전 9시와 내일 오전 9시 계산
+        // 현재 시간을 한국 시간으로 변환
         const now = new Date();
-        const today9am = new Date(now);
-        today9am.setHours(9, 0, 0, 0);
-        
-        const tomorrow9am = new Date(now);
-        tomorrow9am.setDate(tomorrow9am.getDate() + 1);
-        tomorrow9am.setHours(9, 0, 0, 0);
+        const kstNow = new Date(now.getTime() + (9 * 60 * 60 * 1000)); // UTC to KST
 
-        // 현재 시간이 오전 9시 이전이면 어제 9시부터 오늘 9시까지
-        // 현재 시간이 오전 9시 이후면 오늘 9시부터 내일 9시까지
-        const startTime = now.getHours() < 9 ? 
+        // 한국 시간 기준 오늘의 오전 9시와 내일 오전 9시 계산
+        const today9am = new Date(kstNow);
+        today9am.setUTCHours(0, 0, 0, 0); // KST 09:00 = UTC 00:00
+        
+        const tomorrow9am = new Date(kstNow);
+        tomorrow9am.setDate(tomorrow9am.getDate() + 1);
+        tomorrow9am.setUTCHours(0, 0, 0, 0); // KST 09:00 = UTC 00:00
+
+        // 현재 한국 시간이 오전 9시 이전이면 어제 9시부터 오늘 9시까지
+        // 현재 한국 시간이 오전 9시 이후면 오늘 9시부터 내일 9시까지
+        const startTime = kstNow.getHours() < 9 ? 
             new Date(today9am.getTime() - 24 * 60 * 60 * 1000) : today9am;
-        const endTime = now.getHours() < 9 ? today9am : tomorrow9am;
+        const endTime = kstNow.getHours() < 9 ? today9am : tomorrow9am;
 
         // 해당 기간 내의 기록 확인
         const history = await db.doc(user_path).collection("history")
