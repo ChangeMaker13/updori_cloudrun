@@ -49,13 +49,20 @@ export async function sellCoins(access_key: string, secret_key: string, sellCoin
 
     let availableBalance = currentBalance;
     mylog(`${availableBalance} 주문가능`, "debug");
-
+    
+    let amountSum = 0;
+    
     for (const priceSetting of priceSettings) {
       await new Promise((resolve) => setTimeout(resolve, 300)); // 초당 요청수 제한을 회피하기 위해 주문 딜레이 추가
       const { amount, price } = priceSetting;
+      amountSum += amount;
       let amountnum = currentBalance * (amount * 0.01);
+      if(amountSum === 100){
+        amountnum = availableBalance;
+      }
+
       mylog(`${amountnum} 주문시도, ${availableBalance} 주문가능`, "debug");
-      if(availableBalance < amountnum){
+      if(availableBalance < amountnum) {
         amountnum = availableBalance;
       }
       let pricenum = currentPrice * (1 + price * 0.01);
