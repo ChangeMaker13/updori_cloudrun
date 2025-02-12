@@ -54,9 +54,11 @@ export async function logHistory(db : admin.firestore.Firestore, access_key : st
           .get();
 
         if(history.size > 0){
+          const existingCurrencies = history.docs[0].data().currencies;
+          const newCurrencies = hist.currencies.filter(currency => !existingCurrencies.includes(currency));
           await db.doc(user_path).collection("history").doc(history.docs[0].id).update({
             logtime : startTime,
-            currencies : hist.currencies
+            currencies : [...existingCurrencies, ...newCurrencies]
           });
         }
         else{
