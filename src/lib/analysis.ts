@@ -67,7 +67,9 @@ export async function analysis(
 
                 const openPrice = candleData.opening_price;
                 const highPrice = candleData.high_price;
-                const priceIncrease = ((highPrice - openPrice) / openPrice) * 100;
+                const prev_closing_price = candleData.prev_closing_price;
+                const priceIncrease = ((highPrice - prev_closing_price) / prev_closing_price) * 100;
+                console.log("currency : ", currency, "openPrice : ", openPrice, "highPrice : ", highPrice, "prev_closing_price : ", prev_closing_price, "priceIncrease : ", priceIncrease);
                 
                 result.push({
                     month: logtimeDate.getMonth() + 1,
