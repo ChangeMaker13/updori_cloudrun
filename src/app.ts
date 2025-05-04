@@ -92,39 +92,39 @@ app.post("/api/logHistory", async (req: Request, res: Response): Promise<void> =
   };
 
   //24시간 후 다시 실행
-  const options = {
-    method: "POST",
-    url: cloud_run_url + "/api/makeTask",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      funcName: "api/logHistory",
-      afterSeconds: "3600",
-      payload: payload,
-      sellSettingdocPath: user_path,
-    }),
-  };
-
-  mylog(`task create request options: ${JSON.stringify(options)}`, "production");
-  try {
-    await new Promise((resolve, reject) => {
-      request(options, function (error, response) {
-        if (error){
-          mylog(`Error while making task: ${error}`, "production");
-          reject(error);
-        }
-
-        mylog(`Task created successfully`, "production");
-        resolve(response);
-      });
-    });
-  } catch (error) {
-    res.status(500).send({
-      message: "internal server error: " + error,
-    });
-    return;
-  }
+  //const options = {
+  //  method: "POST",
+  //  url: cloud_run_url + "/api/makeTask",
+  //  headers: {
+  //    "Content-Type": "application/json",
+  //  },
+  //  body: JSON.stringify({
+  //    funcName: "api/logHistory",
+  //    afterSeconds: "3600",
+  //    payload: payload,
+  //    sellSettingdocPath: user_path,
+  //  }),
+  //};
+//
+  //mylog(`task create request options: ${JSON.stringify(options)}`, "production");
+  //try {
+  //  await new Promise((resolve, reject) => {
+  //    request(options, function (error, response) {
+  //      if (error){
+  //        mylog(`Error while making task: ${error}`, "production");
+  //        reject(error);
+  //      }
+//
+  //      mylog(`Task created successfully`, "production");
+  //      resolve(response);
+  //    });
+  //  });
+  //} catch (error) {
+  //  res.status(500).send({
+  //    message: "internal server error: " + error,
+  //  });
+  //  return;
+  //}
 
   try {
     await logHistory(db, access_key, secret_key, user_path);

@@ -101,7 +101,7 @@ export async function logHistory(db : admin.firestore.Firestore, access_key : st
           logtime : new Date(),
           currencies : [] as string[]
         }
-    
+        
         const parsedAccount = JSON.parse(account.body);
     
         for(const currency of parsedAccount){
