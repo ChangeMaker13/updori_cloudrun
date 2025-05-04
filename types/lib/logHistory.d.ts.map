@@ -1,1 +1,1 @@
-{"version":3,"file":"logHistory.d.ts","sourceRoot":"","sources":["../../src/lib/logHistory.ts"],"names":[],"mappings":"AAOA,OAAO,KAAK,MAAM,gBAAgB,CAAC;AAKnC,wBAAsB,UAAU,CAAC,EAAE,EAAG,KAAK,CAAC,SAAS,CAAC,SAAS,EAAE,UAAU,EAAG,MAAM,EAAE,UAAU,EAAG,MAAM,EAAE,SAAS,EAAG,MAAM,oBA2C5H"}
+{"version":3,"file":"logHistory.d.ts","sourceRoot":"","sources":["../../src/lib/logHistory.ts"],"names":[],"mappings":"AAMA,OAAO,KAAK,MAAM,gBAAgB,CAAC;AAwFnC,wBAAsB,UAAU,CAAC,EAAE,EAAG,KAAK,CAAC,SAAS,CAAC,SAAS,EAAE,UAAU,EAAG,MAAM,EAAE,UAAU,EAAG,MAAM,EAAE,SAAS,EAAG,MAAM,oBAiE5H"}

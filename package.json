@@ -9,6 +9,9 @@
   "bin": {
     "cmd": "./bin/cmd"
   },
+  "engines": {
+    "node": "18.18.0"
+  },
   "files": [
     "dist/**.*"
   ],
